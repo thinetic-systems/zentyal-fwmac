@@ -1,0 +1,17 @@
+<!-- vim: ts=4 sw=4 filetype=mason
+-->
+<%args>
+        $active
+</%args>
+<%init>
+use EBox::Gettext;
+</%init>
+
+<div class='fwmac'>
+%if ($active eq 'yes') {
+	<div class="note">Módulo de control de acceso por MAC activado</div>
+
+%} else {
+	<div class='note'>Módulo no activado. <a href="/ServiceModule/StatusView">ACTIVAR MÓDULOS</a></div>
+%}
+</div>

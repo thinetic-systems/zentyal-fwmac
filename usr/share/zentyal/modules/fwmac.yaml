@@ -1,0 +1,13 @@
+class: 'EBox::FwMAC'
+
+depends:
+    - objects
+    - network
+    - firewall
+
+enabledepends:
+    - firewall
+
+bootdepends:
+    - network
+    - firewall
