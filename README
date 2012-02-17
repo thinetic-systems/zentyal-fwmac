@@ -9,7 +9,7 @@ This module allow [internal] traffic based on MAC for every object member.
 
 
 
-1.- Create an Object and add members with MAC
+1.- Create an Object 'allowmacs' and add members with MAC, hostname and IP
 
 2.- Enable module
 

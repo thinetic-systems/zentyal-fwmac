@@ -15,7 +15,6 @@ sub new {
 	my $self = $class->SUPER::new('title'    => __('FW por MAC'),
 				      'template' => 'fwmac/index.mas',
 				      @_);
-	$self->{domain} = "ebox-fwmac";
 	bless($self, $class);
 	return $self;
 }

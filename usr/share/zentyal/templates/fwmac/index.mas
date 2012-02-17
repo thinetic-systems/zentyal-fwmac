@@ -9,9 +9,17 @@ use EBox::Gettext;
 
 <div class='fwmac'>
 %if ($active eq 'yes') {
-	<div class="warning">Módulo de control de acceso por MAC activado</div>
+	<div class="note">Módulo de control de acceso por MAC activado</div>
 
 %} else {
-	<div class='note'>Módulo no activado. <a href="/ServiceModule/StatusView">ACTIVAR MÓDULOS</a></div>
+	<div class='warning'>Módulo no activado. <a href="/ServiceModule/StatusView">ACTIVAR MÓDULOS</a></div>
 %}
+</div>
+
+
+<div>
+<h2>Modo de uso</h2>
+<p>1.- <a href="/Network/Objects">Crear un objecto</a> llamado <b>allowmacs</b>.</p>
+<p>2.- Añadir miembros con sus MAC e IP.</p>
+<p>3.- Activar el módulo.</p>
 </div>

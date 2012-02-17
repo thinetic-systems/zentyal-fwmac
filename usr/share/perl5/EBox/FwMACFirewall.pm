@@ -24,6 +24,7 @@ use EBox::Global;
 use EBox::Config;
 use EBox::Firewall;
 use EBox::Gettext;
+use EBox::Sudo;
 
 sub new
 {
@@ -41,55 +42,52 @@ sub input
 
 	my $net = EBox::Global->modInstance('network');
 	my @ifaces = @{$net->InternalIfaces()};
-
-
 	my $obj = EBox::Global->modInstance('objects');
 
+	EBox::Sudo::root('/sbin/iptables -N allowmacs >/dev/null 2>&1 || true');
 
-	for my $id (@{$obj->{objectModel}->ids()}) {
-		my $members = $obj->objectMembers($id);
-		foreach my $member (@{$members}) {
-			my $mac = $member->{macaddr};
-			if (defined($mac)) {
-			    my $address = $member->{ipaddr};
-			    my $name = $member->{ipaddr};
-			    print "IP=$address MAC=$mac NAME=$name\n";
-			    foreach my $ifc (@ifaces) {
-				my $r="-i $ifc -m mac --mac-source $mac -m comment --comment 'IP=$address NAME=$name' -j ACCEPT";
-				push(@rules, $r);
-			    }
-			}
-		}
+	foreach my $ifc (@ifaces) {
+		# add at first position of INPUT chain
+		EBox::Sudo::root("/sbin/iptables -nvL INPUT| egrep -q '.*(allowmacs).*($ifc).*' || /sbin/iptables -I INPUT -i $ifc -j allowmacs");
 	}
 
-	# reject other traffic
-	foreach my $ifc (@ifaces) {
-		my $r="-i $ifc -j REJECT";
-		push(@rules, $r);
+	for my $id (@{$obj->{objectModel}->ids()}) {
+	    my $obj_desc = $obj->objectDescription($id);
+
+	    # OBJECT name => allowed
+	    next unless ($obj_desc eq 'allowmacs');
+
+	    my $members = $obj->objectMembers($id);
+	    foreach my $member (@{$members}) {
+		my $mac = $member->{macaddr};
+		    if (defined($mac)) {
+			my $address = $member->{ipaddr};
+			my $name = $member->{name};
+			#print "IP=$address MAC=$mac NAME=$name\n";
+			foreach my $ifc (@ifaces) {
+			    my $r="-i $ifc -m mac --mac-source $mac -m comment --comment 'IP=$address NAME=$name' -j ACCEPT";
+			    #push(@rules, $r);
+			    push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
+			}
+		    }
+	    }
+	}
+
+	# reject if any rule
+	my $size=scalar @rules;
+	if ( $size > 0 ) {
+	    # reject other traffic
+	    foreach my $ifc (@ifaces) {
+		#my $r="-i $ifc -j LOG --log-prefix '[NO ALLOW MAC $ifc] '";
+		#push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
+		my $r="-i $ifc -j DROP";
+		push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
+	    }
 	}
 
 	return \@rules;
 }
 
-
-#sub output2
-#{
-#	my $self = shift;
-#	my @rules = ();
-#
-#	my $net = EBox::Global->modInstance('network');
-#	my @ifaces = @{$net->InternalIfaces()};
-#
-#        foreach my $port (UDPPORTS) {
-#            foreach my $ifc (@ifaces) {
-#                my $r = "-m state --state NEW -o $ifc  ".
-#                     "-p udp --dport $port -j ACCEPT";
-#                push(@rules, $r);
-#            }
-#        }
-#
-#    return \@rules;
-#}
 
 
 1;

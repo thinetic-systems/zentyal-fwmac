@@ -1,0 +1,15 @@
+#!/bin/sh
+
+
+if [  "$1" = "0" ]; then
+  for n in $(iptables -nvL INPUT --line-numbers | grep allowmacs | tac | awk '{print $1}'); do
+    iptables -D INPUT ${n}
+  done
+
+
+  iptables -F allowmacs >/dev/null 2>&1||true
+  iptables -X allowmacs >/dev/null 2>&1||true
+fi
+
+
+exit 0
