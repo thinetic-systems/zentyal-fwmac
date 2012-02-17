@@ -50,19 +50,23 @@ sub input
 		my $members = $obj->objectMembers($id);
 		foreach my $member (@{$members}) {
 			my $mac = $member->{macaddr};
-			my $address = $member->{ipaddr};
-			my $name = $member->{ipaddr};
-			print "IP=$address MAC=$mac NAME=$name\n";
-			foreach my $ifc (@ifaces) {
-				my $r="-i $ifc -m mac --mac-source $mac -j ACCEPT";
+			if (defined($mac)) {
+			    my $address = $member->{ipaddr};
+			    my $name = $member->{ipaddr};
+			    print "IP=$address MAC=$mac NAME=$name\n";
+			    foreach my $ifc (@ifaces) {
+				my $r="-i $ifc -m mac --mac-source $mac -m comment --comment 'IP=$address NAME=$name' -j ACCEPT";
 				push(@rules, $r);
+			    }
 			}
 		}
 	}
-	# reject other traffic
-	my $r="-j REJECT";
-	push(@rules, $r);
 
+	# reject other traffic
+	foreach my $ifc (@ifaces) {
+		my $r="-i $ifc -j REJECT";
+		push(@rules, $r);
+	}
 
 	return \@rules;
 }
