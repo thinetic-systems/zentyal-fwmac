@@ -48,8 +48,8 @@ sub menu
     my ($self, $root) = @_;
     $root->add(new EBox::Menu::Item('url' => 'FwMAC/Index',
                                     'text' => $self->printableName(),
-                                    'separator' => 'UTM',
-                                    'order' => 460));
+                                    'separator' => 'Gateway',
+                                    'order' => 229));
 }
 
 sub usesPort2 # (protocol, port, iface)
