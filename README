@@ -1,0 +1,16 @@
+======================================================================
+
+		Zentyal Firewall module by MAC
+
+======================================================================
+
+
+This module allow [internal] traffic based on MAC for every object member.
+
+
+
+1.- Create an Object and add members with MAC
+
+2.- Enable module
+
+3.- Watch that you can use internal network if your MAC is registered
