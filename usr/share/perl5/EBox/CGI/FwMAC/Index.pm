@@ -20,7 +20,7 @@ sub new {
 	return $self;
 }
 
-sub _process2($) {
+sub _process($) {
 	my $self = shift;
 	$self->{title} = __('FW MAC');
 	my $fwmac = EBox::Global->modInstance('fwmac');
