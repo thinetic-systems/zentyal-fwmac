@@ -54,22 +54,23 @@ sub input
 	for my $id (@{$obj->{objectModel}->ids()}) {
 	    my $obj_desc = $obj->objectDescription($id);
 
-	    # OBJECT name => allowed
-	    next unless ($obj_desc eq 'allowmacs');
+	    # Only OBJECT name => allowed
+	    #next unless ($obj_desc eq 'allowmacs');
 
 	    my $members = $obj->objectMembers($id);
 	    foreach my $member (@{$members}) {
 		my $mac = $member->{macaddr};
-		    if (defined($mac)) {
-			my $address = $member->{ipaddr};
-			my $name = $member->{name};
-			#print "IP=$address MAC=$mac NAME=$name\n";
-			foreach my $ifc (@ifaces) {
-			    my $r="-i $ifc -m mac --mac-source $mac -m comment --comment 'IP=$address NAME=$name' -j ACCEPT";
-			    #push(@rules, $r);
-			    push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
-			}
+		if (defined($mac)) {
+		    my $address = $member->{ipaddr};
+		    my $name = $member->{name};
+		    #print "IP=$address MAC=$mac NAME=$name\n";
+		    foreach my $ifc (@ifaces) {
+			# FIXME ACCEPT or RETURN
+			my $r="-i $ifc -m mac --mac-source $mac -m comment --comment 'IP=$address NAME=$name OBJ=$obj_desc' -j ACCEPT";
+			#push(@rules, $r);
+			push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
 		    }
+		}
 	    }
 	}
 
@@ -80,7 +81,8 @@ sub input
 	    foreach my $ifc (@ifaces) {
 		#my $r="-i $ifc -j LOG --log-prefix '[NO ALLOW MAC $ifc] '";
 		#push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
-		my $r="-i $ifc -j DROP";
+		#my $r="-i $ifc -j DROP";
+		my $r="-i $ifc -j idrop";
 		push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
 	    }
 	}
