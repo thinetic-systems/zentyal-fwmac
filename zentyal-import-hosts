@@ -1,0 +1,63 @@
+#!/usr/bin/perl
+#
+# This script import a CSV file (second argument)
+# in this format:
+#
+#      mac,ip,hostname
+#
+#
+# in a new Object passed as first argument.
+
+
+use warnings;
+use strict;
+
+if (@ARGV != 2) {
+  print "\nThis script import a CSV file (second argument)\n";
+  print "in this format:\n\n";
+  print "\tmac,ip,hostname\n\n";
+  print "Usage:\n\n";
+  print "\tzentyal-import-hosts object_name hosts.csv\n\n";
+  exit 1;
+}
+
+use EBox;
+use EBox::Global;
+
+EBox::init();
+
+my @members;
+my $obj_name=$ARGV[0];
+my $csv_file=$ARGV[1];
+
+my $objects = EBox::Global->modInstance('objects');
+
+
+
+# parses a file: mac,ip,hostname
+open(my $FD, $csv_file);
+while(my $line = <$FD>) {
+    chomp($line);
+    my ($mac,$ip,$name) = split(',',$line);
+    push (@members, {
+       'name'             => $name,
+       'address_selected' => 'ipaddr',
+       'address'          => 'ipaddr',
+       'ipaddr_ip'        => $ip,
+       'ipaddr_mask'      => 32,
+       'macaddr'          => $mac,
+    });
+    print "Add '$name' with '$mac' => '$ip' \n";
+}
+close($FD);
+
+
+$objects->addObject(
+    #id      => $obj_name,
+    name    => $obj_name,
+    members => \@members,
+);
+
+
+1;
+
