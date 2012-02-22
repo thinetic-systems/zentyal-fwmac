@@ -1,0 +1,25 @@
+#!/bin/sh
+
+
+
+:> /etc/dnsmasq.mac.conf
+
+IFS='
+'
+for line in $(iptables -nvL allowmacs|awk '{print $11" "$13" "$14}'| sed -e 's/IP=//g' -e 's@/32@@g' -e 's/NAME=//g'| grep -v "^ "| grep -v 127); do
+
+  MAC=$(echo $line| awk '{print $1}')
+  IP=$(echo $line| awk '{print $2}')
+  NAME=$(echo $line| awk '{print $3}')
+  echo "dhcp-host=${MAC},${IP},${NAME}" >> /etc/dnsmasq.mac.conf
+
+done
+
+
+/etc/init.d/dnsmasq stop
+:> /var/lib/misc/dnsmasq.leases
+sleep 1
+/etc/init.d/dnsmasq start
+
+exit 0
+

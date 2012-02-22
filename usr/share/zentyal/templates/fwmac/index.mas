@@ -19,7 +19,30 @@ use EBox::Gettext;
 
 <div>
 <h2>Modo de uso</h2>
-<p>1.- <a href="/Network/Objects">Crear un objecto</a> llamado <b>allowmacs</b>.</p>
+<p>1.- <a href="/Network/Objects">Crear objetos</a> con IP y MACs (para IP's dinámicas usar 127.1.1.X).</p>
 <p>2.- Añadir miembros con sus MAC e IP.</p>
 <p>3.- Activar el módulo.</p>
 </div>
+
+<div class='warning'>El servidor DHCP ISC no permite bloquear las peticiones DHCP</div>
+<div>
+<h2>Instalación de dnsmasq</h2>
+<p>1.- Instala el paquete dnsmasq.</p>
+<p>2.- Usa esta configuración en /etc/dnsmasq.conf</p>
+<pre>
+# DNS moved to port 54
+port=54
+dhcp-range=192.168.1.105,192.168.1.199,1h
+
+dhcp-option=option:router,192.168.1.1
+dhcp-option=option:dns-server,192.168.1.1,8.8.8.8
+dhcp-option=option:ntp-server,192.168.1.1
+dhcp-boot=/pxelinux.0,192.168.1.1,192.168.1.1
+
+dhcp-authoritative
+
+conf-file=/etc/dnsmasq.mac.conf
+</pre>
+
+</div>
+

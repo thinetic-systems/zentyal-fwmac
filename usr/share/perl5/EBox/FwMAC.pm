@@ -30,6 +30,9 @@ use EBox::Sudo qw ( :all );
 use EBox::Validate qw ( :all );
 use EBox::FwMACFirewall;
 
+use EBox::Dashboard::Section;
+use EBox::Dashboard::List;
+
 sub _create
 {
     my $class = shift;
@@ -52,17 +55,6 @@ sub menu
                                     'order' => 229));
 }
 
-sub usesPort2 # (protocol, port, iface)
-{
-    my ($self, $protocol, $port, $iface) = @_;
-
-    return undef unless($self->isEnabled());
-
-    return 1 if ($port eq 80);
-    return 1 if ($port eq 389);
-
-    return undef;
-}
 
 sub firewallHelper
 {
@@ -72,5 +64,44 @@ sub firewallHelper
     }
     return undef;
 }
+
+
+sub dnsmasqLeasesWidget
+{
+    my ($self, $widget) = @_;
+
+    my $section = new EBox::Dashboard::Section('dnsmasqleases');
+    $widget->add($section);
+    my $titles = [__('IP address'),__('MAC address'), __('Host name')];
+
+    my $ids = []; 
+    my $rows = {};
+
+    open(my $FD, '/var/lib/misc/dnsmasq.leases');
+    while(my $line = <$FD>) {
+        chomp($line);
+        my ($datetime, $mac, $ip, $name) = split(' ',$line);
+            push(@{$ids}, $ip);
+            $rows->{$ip} = [$ip, $mac, $name];
+    }
+    close($FD);
+
+    $section->add(new EBox::Dashboard::List(undef, $titles, $ids, $rows));
+}
+
+sub widgets
+{
+    return {
+        'dnsmasqleases' => {
+            'title' => "DHCP dnsmasq",
+            'widget' => \&dnsmasqLeasesWidget,
+            'order' => 5,
+            'default' => 1
+        }
+    };
+}
+
+
+
 
 1;
