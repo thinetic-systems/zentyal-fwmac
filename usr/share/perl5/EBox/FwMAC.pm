@@ -81,12 +81,21 @@ sub dnsmasqLeasesWidget
     while(my $line = <$FD>) {
         chomp($line);
         my ($datetime, $mac, $ip, $name) = split(' ',$line);
-            push(@{$ids}, $ip);
-            $rows->{$ip} = [$ip, $mac, $name];
+        my ($ipa, $ipb, $ipc, $ipd) = split('\.', $ip);
+
+        push(@{$ids}, $ipd);
+        $rows->{$ipd} = [$ip, $mac, $name];
     }
     close($FD);
 
-    $section->add(new EBox::Dashboard::List(undef, $titles, $ids, $rows));
+    # sort ids array
+    my $sorted=[];
+    foreach my $id (sort {$a<=>$b} keys (%{$rows})) {
+      #print "id=$id\n";
+      push(@{$sorted}, $id);
+    }
+
+    $section->add(new EBox::Dashboard::List(undef, $titles, $sorted, $rows));
 }
 
 sub widgets
