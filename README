@@ -9,8 +9,12 @@ This module allow [internal] traffic based on MAC for every object member.
 
 
 
-1.- Create an Object 'allowmacs' and add members with MAC, hostname and IP
+1.- Create a Objects and add members with MAC, hostname and IP
+    (use 127.1.1.x for members without static address)
 
 2.- Enable module
 
 3.- Watch that you can use internal network if your MAC is registered
+
+4.- zentyal-dhcp package use ISC dhcp3-server that CAN'T be firewalled
+    Uninstall it and install dnsmasq for block DHCP traffic.
