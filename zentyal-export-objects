@@ -19,20 +19,25 @@ EBox::init();
 
 my $obj = EBox::Global->modInstance('objects');
 
-for my $id (@{$obj->{objectModel}->ids()}) {
-  my $obj_desc = $obj->objectDescription($id);
+
+foreach my $object (@{$obj->objects}) {
+  my $obj_desc = $obj->objectDescription($object->{id});
   print "$obj_desc\n";
 
-  my $members = $obj->objectMembers($id);
+  my $members = $obj->objectMembers($object->{id});
   foreach my $member (@{$members}) {
     my $mac = $member->{macaddr};
-    if (defined($mac)) {
-      my $address = $member->{ipaddr};
-      my $name = $member->{name};
-      print "  $address,$mac,$name\n";
-    }
+    defined($mac) or next;
+    ($mac ne "") or next;
+
+
+    my $address = $member->{ipaddr};
+    $address =~ s/\/32//;
+    my $name = $member->{name};
+    print "  $mac,$address,$name\n";
   }
 }
 
 
 1;
+

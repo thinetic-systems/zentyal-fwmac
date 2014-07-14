@@ -1,3 +1,9 @@
+zentyal-fwmac (3.4.1) trusty; urgency=medium
+
+  * Prepare for Zentyal 3.4
+
+ -- Mario Izquierdo (mariodebian) <mariodebian@gmail.com>  Mon, 14 Jul 2014 20:39:58 +0200
+
 zentyal-fwmac (2.2.1) lucid; urgency=low
 
   * Initial version

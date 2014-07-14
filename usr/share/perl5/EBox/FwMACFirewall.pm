@@ -51,40 +51,43 @@ sub input
 		EBox::Sudo::root("/sbin/iptables -nvL INPUT| egrep -q '.*(allowmacs).*($ifc).*' || /sbin/iptables -I INPUT -i $ifc -j allowmacs");
 	}
 
-	for my $id (@{$obj->{objectModel}->ids()}) {
-	    my $obj_desc = $obj->objectDescription($id);
+	foreach my $object (@{$obj->objects}) {
+		my $obj_desc = $obj->objectDescription($object->{id});
 
-	    # Only OBJECT name => allowed
-	    #next unless ($obj_desc eq 'allowmacs');
+		# Only OBJECT name => allowed
+		#next unless ($obj_desc eq 'allowmacs');
 
-	    my $members = $obj->objectMembers($id);
-	    foreach my $member (@{$members}) {
-		my $mac = $member->{macaddr};
-		if (defined($mac)) {
-		    my $address = $member->{ipaddr};
-		    my $name = $member->{name};
-		    #print "IP=$address MAC=$mac NAME=$name\n";
-		    foreach my $ifc (@ifaces) {
-			# FIXME ACCEPT or RETURN
-			my $r="-i $ifc -m mac --mac-source $mac -m comment --comment 'IP=$address NAME=$name OBJ=$obj_desc' -j ACCEPT";
-			#push(@rules, $r);
-			push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
-		    }
+		my $members = $obj->objectMembers($object->{id});
+		foreach my $member (@{$members}) {
+			my $mac = $member->{macaddr};
+
+			defined($mac) or next;
+			($mac ne "") or next;
+
+			my $address = $member->{ipaddr};
+			my $name = $member->{name};
+			#print "IP=$address MAC=$mac NAME=$name\n";
+			foreach my $ifc (@ifaces) {
+				# FIXME ACCEPT or RETURN
+				my $r="-i $ifc -m mac --mac-source $mac -m comment --comment 'IP=$address NAME=$name OBJ=$obj_desc' -j ACCEPT";
+				#push(@rules, $r);
+				push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
+				}
 		}
-	    }
+
 	}
 
 	# reject if any rule
 	my $size=scalar @rules;
 	if ( $size > 0 ) {
-	    # reject other traffic
-	    foreach my $ifc (@ifaces) {
-		#my $r="-i $ifc -j LOG --log-prefix '[NO ALLOW MAC $ifc] '";
-		#push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
-		#my $r="-i $ifc -j DROP";
-		my $r="-i $ifc -j idrop";
-		push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
-	    }
+		# reject other traffic
+		foreach my $ifc (@ifaces) {
+			#my $r="-i $ifc -j LOG --log-prefix '[NO ALLOW MAC $ifc] '";
+			#push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
+			#my $r="-i $ifc -j DROP";
+			my $r="-i $ifc -j idrop";
+			push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
+		}
 	}
 
 	return \@rules;
