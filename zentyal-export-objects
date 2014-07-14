@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+#
+# This script export objects to stdout
+# in this format:
+#
+#      mac,ip,hostname
+#
+#
+
+
+use warnings;
+use strict;
+
+use EBox;
+use EBox::Global;
+
+EBox::init();
+
+
+my $obj = EBox::Global->modInstance('objects');
+
+for my $id (@{$obj->{objectModel}->ids()}) {
+  my $obj_desc = $obj->objectDescription($id);
+  print "$obj_desc\n";
+
+  my $members = $obj->objectMembers($id);
+  foreach my $member (@{$members}) {
+    my $mac = $member->{macaddr};
+    if (defined($mac)) {
+      my $address = $member->{ipaddr};
+      my $name = $member->{name};
+      print "  $address,$mac,$name\n";
+    }
+  }
+}
+
+
+1;
