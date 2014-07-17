@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+
+
+case "$1" in
+    configure)
+
+	[ -f /etc/zentyal/hooks/fwmac.postservice ] && rm -f /etc/zentyal/hooks/fwmac.postservice
+	[ -f /etc/zentyal/hooks/fwmac.preservice ] && rm -f /etc/zentyal/hooks/fwmac.preservice
+
+        # initial setup
+        /usr/share/zentyal/initial-setup --no-restart fwmac $2
+
+        # restart module
+        service zentyal fwmac restart || true
+
+        dpkg-trigger --no-await zentyal-core
+    ;;
+esac
+
+exit 0

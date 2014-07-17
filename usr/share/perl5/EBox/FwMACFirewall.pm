@@ -72,7 +72,7 @@ sub input
 				my $r="-i $ifc -m mac --mac-source $mac -m comment --comment 'IP=$address NAME=$name OBJ=$obj_desc' -j ACCEPT";
 				#push(@rules, $r);
 				push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
-				}
+			}
 		}
 
 	}
@@ -82,8 +82,9 @@ sub input
 	if ( $size > 0 ) {
 		# reject other traffic
 		foreach my $ifc (@ifaces) {
-			#my $r="-i $ifc -j LOG --log-prefix '[NO ALLOW MAC $ifc] '";
-			#push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });
+			#my $r2="-i $ifc -j LOG --log-prefix '[NO ALLOW MAC $ifc] '";
+			#push(@rules, { 'rule' => $r2, 'chain' => 'allowmacs' });
+
 			#my $r="-i $ifc -j DROP";
 			my $r="-i $ifc -j idrop";
 			push(@rules, { 'rule' => $r, 'chain' => 'allowmacs' });

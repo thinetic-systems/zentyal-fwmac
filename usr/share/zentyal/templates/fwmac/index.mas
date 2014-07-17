@@ -9,26 +9,26 @@ use EBox::Gettext;
 
 <div class='fwmac'>
 %if ($active eq 'yes') {
-	<div class="note">Módulo de control de acceso por MAC activado</div>
+	<div class="note">M&oacute;dulo de control de acceso por MAC activado</div>
 
 %} else {
-	<div class='warning'>Módulo no activado. <a href="/ServiceModule/StatusView">ACTIVAR MÓDULOS</a></div>
+	<div class='warning'>M&oacute;dulo no activado. <a href="/ServiceModule/StatusView">ACTIVAR M&Oacute;DULOS</a></div>
 %}
 </div>
 
 
 <div>
 <h2>Modo de uso</h2>
-<p>1.- <a href="/Network/Objects">Crear objetos</a> con IP y MACs (para IP's dinámicas usar 127.1.1.X).</p>
-<p>2.- Añadir miembros con sus MAC e IP.</p>
-<p>3.- Activar el módulo.</p>
+<p>1.- <a href="/Network/Objects">Crear objetos</a> con IP y MACs (para IP's din&aacute;micas usar 127.1.1.X).</p>
+<p>2.- A&ntilde;adir miembros con sus MAC e IP.</p>
+<p>3.- Activar el m&oacute;dulo.</p>
 </div>
 
 <div class='warning'>El servidor DHCP ISC no permite bloquear las peticiones DHCP</div>
 <div>
-<h2>Instalación de dnsmasq</h2>
+<h2>Instalaci&oacute;n de dnsmasq</h2>
 <p>1.- Instala el paquete dnsmasq.</p>
-<p>2.- Usa esta configuración en /etc/dnsmasq.conf</p>
+<p>2.- Usa esta configuraci&oacute;n en /etc/dnsmasq.conf</p>
 <pre>
 # DNS moved to port 54
 port=54

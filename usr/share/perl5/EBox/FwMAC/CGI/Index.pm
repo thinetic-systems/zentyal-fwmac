@@ -1,10 +1,11 @@
-package EBox::CGI::FwMAC::Index;
+package EBox::FwMAC::CGI::Index;
 
 use strict;
 use warnings;
 
 use base 'EBox::CGI::ClientBase';
 
+use EBox;
 use EBox::Global;
 use EBox::Gettext;
 
@@ -13,7 +14,7 @@ use EBox::Gettext;
 sub new {
 	my $class = shift;
 	my $self = $class->SUPER::new('title'    => __('FW por MAC'),
-				      'template' => 'fwmac/index.mas',
+				      'template' => '/fwmac/index.mas',
 				      @_);
 	bless($self, $class);
 	return $self;

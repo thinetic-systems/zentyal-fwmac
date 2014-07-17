@@ -1,4 +1,3 @@
 usr/* usr/
-etc/* etc/
 zentyal-import-hosts usr/bin/
 zentyal-export-objects usr/bin/
