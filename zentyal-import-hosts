@@ -30,12 +30,11 @@ my @members;
 my $obj_name=$ARGV[0];
 my $csv_file=$ARGV[1];
 
-my $objects = EBox::Global->modInstance('objects');
-
-
+my $objects = EBox::Global->modInstance('network');
 
 # parses a file: mac,ip,hostname
-open(my $FD, $csv_file);
+open(my $FD, $csv_file) or die "Can't open '$csv_file': $!";
+
 while(my $line = <$FD>) {
     chomp($line);
     my ($mac,$ip,$name) = split(',',$line);

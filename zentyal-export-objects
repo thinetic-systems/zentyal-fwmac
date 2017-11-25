@@ -17,7 +17,7 @@ use EBox::Global;
 EBox::init();
 
 
-my $obj = EBox::Global->modInstance('objects');
+my $obj = EBox::Global->modInstance('network');
 
 
 foreach my $object (@{$obj->objects}) {

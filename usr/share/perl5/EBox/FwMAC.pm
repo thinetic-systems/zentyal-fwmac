@@ -66,8 +66,7 @@ sub _generateDNSmasq
                                  DIR      => EBox::Config::tmp());
 
     open DHCPFILE, ">$dhcpFile";
-    my $obj = EBox::Global->modInstance('objects');
-
+    my $obj = EBox::Global->modInstance('network');
 
     foreach my $object (@{$obj->objects}) {
         my $obj_desc = $obj->objectDescription($object->{id});

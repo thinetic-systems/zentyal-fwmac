@@ -19,7 +19,7 @@ use warnings;
 
 use base 'EBox::FirewallHelper';
 
-use EBox::Objects;
+
 use EBox::Global;
 use EBox::Config;
 use EBox::Firewall;
@@ -42,7 +42,7 @@ sub input
 
 	my $net = EBox::Global->modInstance('network');
 	my @ifaces = @{$net->InternalIfaces()};
-	my $obj = EBox::Global->modInstance('objects');
+	my $obj = EBox::Global->modInstance('network');
 
 	EBox::Sudo::root('/sbin/iptables -N allowmacs >/dev/null 2>&1 || true');
 
