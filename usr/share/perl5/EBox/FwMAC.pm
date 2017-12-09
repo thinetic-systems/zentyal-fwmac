@@ -85,6 +85,8 @@ sub _generateDNSmasq
             $log->info("FWMAC => firewallHelper dhcp-host=$mac,$address,$name");
             if ( index($address, '127.1') == -1 ) {
                 print DHCPFILE "dhcp-host=$mac,$address,$name\n";
+            } else {
+                print DHCPFILE "dhcp-host=$mac\n";
             }
         }
     }
