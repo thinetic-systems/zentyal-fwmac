@@ -1,7 +1,6 @@
 class: 'EBox::FwMAC'
 
 depends:
-    - objects
     - network
     - firewall
 
